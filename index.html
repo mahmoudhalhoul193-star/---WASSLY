@@ -1,175 +1,316 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>وصلي - Wassaly</title>
-  <style>
-    :root{
-      --bg:#ffffff;
-      --text:#111;
-      --primary:#0a5adf;
-    }
-    body.dark{
-      --bg:#111;
-      --text:#eee;
-      --primary:#f59e0b;
-    }
-    body{
-      margin:0;
-      font-family:Arial, Helvetica, sans-serif;
-      background:var(--bg);
-      color:var(--text);
-      transition:0.3s;
-    }
-    header{
-      text-align:center;
-      padding:20px;
-      animation:fadeIn 1s ease-in;
-    }
-    header img{
-      width:200px;
-    }
-    .toggle{
-      position:fixed;
-      top:10px;
-      left:10px;
-      padding:8px 12px;
-      cursor:pointer;
-    }
-    .container{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:20px;
-      padding:20px;
-    }
-    .box{
-      border:1px solid #ccc;
-      padding:15px;
-      border-radius:10px;
-      animation:slideUp 0.8s;
-    }
-    h2{color:var(--primary);}
-    input,select,button,textarea{
-      width:100%;
-      margin:5px 0 10px;
-      padding:8px;
-    }
-    button{
-      background:var(--primary);
-      color:#fff;
-      border:none;
-      cursor:pointer;
-    }
-    footer{
-      text-align:center;
-      padding:15px;
-      margin-top:20px;
-      border-top:1px solid #ccc;
-    }
-    @keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
-    @keyframes slideUp{from{transform:translateY(20px);opacity:0;}to{transform:none;opacity:1;}}
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>وصلي - Wassaly</title>
+<style>
+:root{
+    --primary:#607d8b;
+    --card:#ffffffee;
+    --text:#333;
+    --background:#e0e0e0;
+}
+body.dark{
+    --primary:#00bcd4;
+    --card:#1e1e2fdd;
+    --text:#e0e0ff;
+    --background:#121226;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:Segoe UI,Arial;background:var(--background);color:var(--text);transition: background 0.3s,color 0.3s;}
+#splash{position:fixed;inset:0;background:var(--background);display:flex;align-items:center;justify-content:center;z-index:9999;animation:fadeOut 1s ease forwards;animation-delay:2.5s;}
+#splash h1{background:var(--primary);color:#fff;padding:20px 40px;border-radius:20px;}
+@keyframes fadeOut{to{opacity:0;visibility:hidden}}
+header,footer{background:var(--card);padding:15px;text-align:center;border-radius:12px;margin:5px 10px;backdrop-filter:blur(8px);box-shadow:0 4px 10px #0002;transition: background 0.3s;}
+nav{display:flex;gap:10px;justify-content:center;margin:15px 0;}
+nav button{background:var(--primary);color:#fff;border:none;padding:10px 20px;border-radius:12px;cursor:pointer;transition: background 0.3s, transform 0.2s;}
+nav button:hover{background:#455a64;transform:translateY(-2px);}
+.page{display:none;padding:20px}
+.page.active{display:block}
+.box{max-width:700px;margin:auto;background:var(--card);padding:25px;border-radius:22px;box-shadow:0 8px 25px #0002;transition: background 0.3s;}
+h2{text-align:center;color:var(--primary)}
+input,select,textarea,button{width:100%;padding:12px;margin:6px 0;border-radius:12px;border:1px solid #ccc;transition:border 0.3s, background 0.3s;}
+input:focus,select:focus,textarea:focus{border-color:var(--primary);outline:none;}
+button{background:var(--primary);color:#fff;border:none;}
+button:hover{background:#455a64;}
+.order{border:1px dashed #ccc;padding:12px;border-radius:14px;margin:10px 0;background:#fff8;box-shadow:0 4px 12px #0001;}
+.status-new{color:green;font-weight:bold}
+.status-run{color:orange;font-weight:bold}
+.status-done{color:blue;font-weight:bold}
+#help{position:fixed;right:18px;bottom:20px;z-index:60}
+#help button{background:#25D366;border-radius:12px;padding:10px 14px;cursor:pointer;}
+#helpOptions{display:none;background:var(--card);border-radius:14px;overflow:hidden;margin-bottom:8px;box-shadow:0 6px 20px #0002;}
+#helpOptions a{display:block;padding:10px 14px;text-decoration:none;color:var(--text);transition:background 0.2s;}
+#helpOptions a:hover{background:#ccc3;}
+.theme-toggle{position:fixed;top:15px;left:15px;width:60px;height:30px;background:var(--primary);border-radius:30px;cursor:pointer;display:flex;align-items:center;padding:2px;transition: background 0.3s;z-index:50;}
+.toggle-circle{width:26px;height:26px;background:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;transition: all 0.3s ease;font-size:16px;margin-left:2px;}
+body.dark .toggle-circle{margin-left:calc(100% - 28px);}
+</style>
 </head>
 <body>
-  <button class="toggle" onclick="toggleMode()">🌙 / ☀️</button>
+<div id="splash"><h1>وصلي - Wassaly</h1></div>
 
-  <header>
-    <img src="c6faf1d1-4a1d-483a-9fa6-295d3a3f2328.png" alt="Wassaly Logo">
-    <h1>وصلي - Wassaly</h1>
-    <p>Delivery To Your Door</p>
-  </header>
+<div class="theme-toggle" onclick="toggleTheme()"><div class="toggle-circle">🌞</div></div>
 
-  <div class="container">
-    <!-- قسم العميل -->
-    <div class="box">
-      <h2>طلب توصيل</h2>
-      <input id="cname" placeholder="اسمك">
-      <input id="cphone" placeholder="رقمك">
-      <textarea id="order" placeholder="تفاصيل الطلب"></textarea>
-      <input id="price" type="number" min="10" placeholder="السعر (10 جنيه على الأقل)">
+<header><h1>وصلي - Wassaly</h1><p>خدمة توصيل سريعة وآمنة</p></header>
+<nav>
+<button onclick="showPage('orderPage')">طلب توصيل</button>
+<button onclick="showPage('driverPage')">السواق</button>
+<button onclick="showPage('adminPage')">Admin</button>
+</nav>
 
-      <select id="type">
-        <option>مطعم</option>
-        <option>متجر</option>
-        <option>طلب شخصي</option>
-        <option>توصيلية</option>
-      </select>
+<section id="orderPage" class="page active">
+<div class="box">
+<h2>طلب توصيل</h2>
+<input id="cname" placeholder="الاسم الثلاثي">
+<input id="cphone" placeholder="رقم الهاتف (11 رقم)">
+<input id="clocation" placeholder="الموقع (رابط أو نص)">
+<textarea id="details" placeholder="تفاصيل الطلب"></textarea>
+<input id="price" type="number" min="10" placeholder="السعر (10 جنيه على الأقل)">
+<select id="typeClient">
+    <option value="عميل">عميل</option>
+    <option value="متجر">متجر</option>
+    <option value="مطعم">مطعم</option>
+    <option value="وصلني">وصلني</option>
+</select>
+<select id="selectDriver">
+    <option value="">اختر السواق</option>
+</select>
+<button onclick="sendOrder()">إرسال الطلب</button>
+</div>
+</section>
 
-      <select id="vehicle">
-        <option>موتوسيكل</option>
-        <option>عربية</option>
-        <option>توك توك</option>
-        <option>عجلة</option>
-      </select>
+<section id="driverPage" class="page">
+<div class="box">
+<h2>دخول السواق</h2>
+<input id="driverName" placeholder="اسم السواق الثلاثي">
+<input id="driverPhone" placeholder="رقم واتساب السواق (11 رقم)">
+<button onclick="enterDriver()">دخول</button>
+<h2>طلباتك</h2>
+<div id="driverOrders"></div>
+</div>
+</section>
 
-      <select id="driver"></select>
+<section id="adminPage" class="page">
+<div class="box">
+<h2>Admin Login</h2>
+<input id="adminPass" type="password" placeholder="كلمة المرور">
+<button onclick="adminLogin()">دخول</button>
+<div id="adminPanel" style="display:none">
+<h2>كل الطلبات</h2>
+<div id="allOrders"></div>
+<h2>قائمة السواقين</h2>
+<div id="allDrivers"></div>
+</div>
+</div>
+</section>
 
-      <button onclick="sendWhats()">إرسال الطلب على واتساب</button>
-    </div>
+<div id="help">
+<button onclick="toggleHelp()">💬 مساعدة</button>
+<div id="helpOptions">
+<a href="https://wa.me/201208624618?text=شكوى تأخير الطلب" target="_blank">⏰ تأخير الطلب</a>
+<a href="https://wa.me/201208624618?text=شكوى السواق لم يتواصل" target="_blank">📞 السواق لم يتواصل</a>
+<a href="https://wa.me/201208624618?text=مشكلة في السعر" target="_blank">💰 مشكلة في السعر</a>
+<a href="https://wa.me/201208624618?text=طلب لم يتم" target="_blank">❌ طلب لم يتم</a>
+</div>
+</div>
 
-    <!-- قسم السواق -->
-    <div class="box">
-      <h2>تسجيل سواق جديد</h2>
-      <input id="dname" placeholder="اسم السواق">
-      <input id="dphone" placeholder="رقم واتساب">
-      <input id="dimg" placeholder="رابط صورة السواق">
-      <select id="dvehicle">
-        <option>موتوسيكل</option>
-        <option>عربية</option>
-        <option>توك توك</option>
-        <option>عجلة</option>
-      </select>
-      <button onclick="saveDriver()">حفظ السواق</button>
-    </div>
-  </div>
+<footer>حقوق النشر محفوظة ©<br>تطوير: mahmoud halhoul<br>تصميم: mohamed elskhely</footer>
 
-  <footer>
-    حقوق النشر محفوظة ©<br>
-    تطوير: mahmoud halhoul<br>
-    تصميم: mohamed elskhely
-  </footer>
+<script>
+let currentDriver='';
 
-  <script>
-    const driverSelect = document.getElementById('driver');
+// ===== Show Page =====
+function showPage(id){
+    document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    renderAll();
+    renderDriver();
+    renderDriversSelect();
+}
 
-    function toggleMode(){
-      document.body.classList.toggle('dark');
+// ===== Dark Mode =====
+function toggleTheme(){
+    document.body.classList.toggle('dark');
+    const circle=document.querySelector('.toggle-circle');
+    circle.textContent=document.body.classList.contains('dark')?'🌙':'🌞';
+}
+
+// ===== حفظ السواقين =====
+function saveDriver(name,phone){
+    if(name.trim().split(' ').length<3 || !/^\d{11}$/.test(phone)){
+        alert('اسم السواق يجب ان يكون ثلاثي ورقم الهاتف 11 رقم');
+        return false;
     }
-
-    function loadDrivers(){
-      driverSelect.innerHTML='';
-      const drivers = JSON.parse(localStorage.getItem('drivers')||'[]');
-      drivers.forEach((d,i)=>{
-        const op=document.createElement('option');
-        op.value=i;
-        op.text=d.name+' - '+d.vehicle;
-        driverSelect.appendChild(op);
-      });
+    let drivers=JSON.parse(localStorage.drivers||'[]');
+    if(!drivers.find(d=>d.phone===phone)){
+        drivers.push({name,phone});
+        localStorage.drivers=JSON.stringify(drivers);
+        renderDriversSelect();
+        renderAllDrivers();
     }
+    return true;
+}
 
-    function saveDriver(){
-      const drivers = JSON.parse(localStorage.getItem('drivers')||'[]');
-      drivers.push({
-        name:dname.value,
-        phone:dphone.value,
-        img:dimg.value,
-        vehicle:dvehicle.value
-      });
-      localStorage.setItem('drivers',JSON.stringify(drivers));
-      loadDrivers();
-      alert('تم حفظ السواق');
-    }
+// ===== Render Dropdown السواقين =====
+function renderDriversSelect(){
+    let select=document.getElementById('selectDriver');
+    if(!select) return;
+    let drivers=JSON.parse(localStorage.drivers||'[]');
+    select.innerHTML='<option value="">اختر السواق</option>';
+    drivers.forEach(d=>{
+        select.innerHTML+=`<option value="${d.phone}">${d.name} (${d.phone})</option>`;
+    });
+}
 
-    function sendWhats(){
-      const drivers = JSON.parse(localStorage.getItem('drivers')||'[]');
-      const d = drivers[driverSelect.value];
-      if(!d){alert('اختار سواق');return;}
-      const msg = `طلب جديد من وصلي 🚀%0Aالاسم: ${cname.value}%0Aالهاتف: ${cphone.value}%0Aالطلب: ${order.value}%0Aالسعر: ${price.value} جنيه%0Aالنوع: ${type.value}%0Aالمركبة: ${vehicle.value}`;
-      window.open(`https://wa.me/${d.phone}?text=${msg}`,'_blank');
-    }
+// ===== Driver Page =====
+function enterDriver(){
+    let name=driverName.value.trim();
+    let phone=driverPhone.value.trim();
+    if(!saveDriver(name,phone)) return;
+    currentDriver=name;
+    renderDriver();
+}
 
-    loadDrivers();
-  </script>
+// ===== Render Driver Orders =====
+function renderDriver(){
+    let box=document.getElementById('driverOrders'); box.innerHTML='';
+    JSON.parse(localStorage.orders||'[]').forEach(o=>{
+        if(o.status!=='done' && (o.driver==='' || o.driver===currentDriver)){
+            let driverNameDisplay=o.driver || 'غير مستلم';
+            box.innerHTML+=`<div class='order'>
+            👤 ${o.name} | نوع: ${o.type} <br>
+            📦 ${o.details}<br>💰 ${o.price} جنيه | 📍 ${o.location || 'لم يتم إدخاله'}<br>
+            السواق: ${driverNameDisplay}<br>
+            الحالة: <span class='status-${o.status}'>${o.status}</span><br>
+            ${o.driver===''?`<button onclick=takeOrder(${o.id},'${o.phone}','${o.name}','${o.details}','${o.price}','${o.location}')>استلام الطلب & واتس</button>`:''}
+            ${o.driver===currentDriver?`<button onclick=nextStatus(${o.id})>تغيير الحالة</button>`:''}
+            ${o.rating===null?`<button onclick=rateOrder(${o.id})>تقييم الطلب</button>`:`تقييم: ${o.rating} ⭐`}
+            </div>`;
+        }
+    });
+}
+
+// ===== Send Order =====
+function sendOrder(){
+    let cnameV=cname.value.trim(), cphoneV=cphone.value.trim(), clocationV=clocation.value.trim(), detailsV=details.value.trim();
+    let priceV=Number(price.value), typeV=typeClient.value, driverPhoneV=selectDriver.value;
+    let valid=true;
+    if(cnameV.split(' ').length<3){ cname.style.borderColor='red'; valid=false;} else {cname.style.borderColor='#ccc';}
+    if(!/^\d{11}$/.test(cphoneV)){ cphone.style.borderColor='red'; valid=false;} else {cphone.style.borderColor='#ccc';}
+    if(priceV<10){ price.style.borderColor='red'; valid=false;} else {price.style.borderColor='#ccc';}
+    if(!valid) return;
+
+    let orders=JSON.parse(localStorage.orders||'[]');
+    orders.push({
+        id:Date.now(), name:cnameV, phone:cphoneV, location:clocationV, details:detailsV,
+        price:priceV, type:typeV, status:'new', driver:'', driverPhone:driverPhoneV, rating:null
+    });
+    localStorage.orders=JSON.stringify(orders);
+    alert('تم إرسال الطلب');
+    cname.value=''; cphone.value=''; clocation.value=''; details.value=''; price.value=''; selectDriver.value='';
+    renderDriver();
+    renderAll();
+}
+
+// ===== Take Order with WhatsApp =====
+function takeOrder(id,phone,name,details,price,location){
+    let orders=JSON.parse(localStorage.orders||'[]');
+    orders=orders.map(o=>o.id===id?{...o,driver:currentDriver,status:'run'}:o);
+    localStorage.orders=JSON.stringify(orders);
+    renderDriver();
+    renderAll();
+
+    let message=`مرحبا ${currentDriver}, لديك طلب جديد:
+👤 العميل: ${name}
+📦 التفاصيل: ${details}
+💰 السعر: ${price} جنيه
+📍 الموقع: ${location || 'لم يتم إدخاله'}`;
+    let waLink=`https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+    window.open(waLink,'_blank');
+}
+
+// ===== Next Status =====
+function nextStatus(id){
+    let orders=JSON.parse(localStorage.orders||'[]');
+    orders=orders.map(o=>{
+        if(o.id===id && o.driver===currentDriver){
+            if(o.status==='new') o.status='run';
+            else if(o.status==='run') o.status='done';
+        } return o;
+    });
+    localStorage.orders=JSON.stringify(orders);
+    renderDriver();
+    renderAll();
+}
+
+// ===== Rate Order =====
+function rateOrder(id){
+    let rating=prompt('قيم الطلب من 1 إلى 5 ⭐');
+    rating=Number(rating);
+    if(rating>=1 && rating<=5){
+        let orders=JSON.parse(localStorage.orders||'[]');
+        orders=orders.map(o=>o.id===id?{...o,rating}:o);
+        localStorage.orders=JSON.stringify(orders);
+        renderDriver();
+        renderAll();
+    } else alert('الرجاء إدخال رقم بين 1 و5');
+}
+
+// ===== Admin =====
+function adminLogin(){
+    if(adminPass.value==='mahmoud2008joker679001'){
+        adminPanel.style.display='block';
+        renderAll();
+        renderAllDrivers();
+    } else alert('كلمة مرور خطأ');
+}
+
+function renderAll(){
+    let box=document.getElementById('allOrders'); if(!box) return;
+    box.innerHTML='';
+    JSON.parse(localStorage.orders||'[]').forEach(o=>{
+        box.innerHTML+=`<div class='order'>
+        👤 ${o.name} | نوع: ${o.type} | ${o.details} | 💰 ${o.price} جنيه | 📍 ${o.location || 'لم يتم إدخاله'} | 
+        سواق: <input value='${o.driver}' onchange="assignDriver(${o.id}, this.value)"> | 
+        حالة: <select onchange="setStatus(${o.id}, this.value)">
+            <option value="new" ${o.status==='new'?'selected':''}>new</option>
+            <option value="run" ${o.status==='run'?'selected':''}>run</option>
+            <option value="done" ${o.status==='done'?'selected':''}>done</option>
+        </select>
+        ${o.rating!==null?` | تقييم: ${o.rating} ⭐` : ''}
+        </div>`;
+    });
+}
+
+// ===== Assign Driver =====
+function assignDriver(id,name){
+    let orders=JSON.parse(localStorage.orders||'[]');
+    orders=orders.map(o=>o.id===id?{...o,driver:name}:o);
+    localStorage.orders=JSON.stringify(orders);
+    renderDriver();
+}
+
+// ===== Set Status =====
+function setStatus(id,status){
+    let orders=JSON.parse(localStorage.orders||'[]');
+    orders=orders.map(o=>o.id===id?{...o,status}:o);
+    localStorage.orders=JSON.stringify(orders);
+    renderDriver();
+}
+
+// ===== Render Drivers List Admin =====
+function renderAllDrivers(){
+    let box=document.getElementById('allDrivers'); if(!box) return;
+    let drivers=JSON.parse(localStorage.drivers||'[]');
+    box.innerHTML='';
+    drivers.forEach(d=>{
+        box.innerHTML+=`<div class="order">${d.name} | ${d.phone}</div>`;
+    });
+}
+
+function toggleHelp(){helpOptions.style.display=helpOptions.style.display==='block'?'none':'block'}
+</script>
 </body>
 </html>
