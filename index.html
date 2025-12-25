@@ -173,7 +173,19 @@ const helpOptions=document.getElementById('helpOptions');
 helpOptions.style.display = helpOptions.style.display==='block'?'none':'block';
 }
 
-// باقي الكود: حفظ السواقين، الطلبات، موافقة Admin، التواصل مع السواق، تغيير الحالة، ... كما في النسخة السابقة
+// ===== Admin Login =====
+function adminLogin(){
+const pass=document.getElementById('adminPass').value;
+if(pass==='mahmoud2008joker679001'){
+document.getElementById('adminPanel').style.display='block';
+renderAll();
+renderPending();
+renderDriversSelect();
+}else{
+alert('كلمة مرور خطأ');
+}
+
+// باقي وظائف الموقع: sendOrder, renderDriver, takeOrder, approveOrder, contactDriver, renderClientActions...
 </script>
 </body>
 </html>
