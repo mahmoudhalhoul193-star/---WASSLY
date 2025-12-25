@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>وصلي - Wassaly</title>
+  <style>
+    :root{
+      --bg:#ffffff;
+      --text:#111;
+      --primary:#0a5adf;
+    }
+    body.dark{
+      --bg:#111;
+      --text:#eee;
+      --primary:#f59e0b;
+    }
+    body{
+      margin:0;
+      font-family:Arial, Helvetica, sans-serif;
+      background:var(--bg);
+      color:var(--text);
+      transition:0.3s;
+    }
+    header{
+      text-align:center;
+      padding:20px;
+      animation:fadeIn 1s ease-in;
+    }
+    header img{
+      width:200px;
+    }
+    .toggle{
+      position:fixed;
+      top:10px;
+      left:10px;
+      padding:8px 12px;
+      cursor:pointer;
+    }
+    .container{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:20px;
+      padding:20px;
+    }
+    .box{
+      border:1px solid #ccc;
+      padding:15px;
+      border-radius:10px;
+      animation:slideUp 0.8s;
+    }
+    h2{color:var(--primary);}
+    input,select,button,textarea{
+      width:100%;
+      margin:5px 0 10px;
+      padding:8px;
+    }
+    button{
+      background:var(--primary);
+      color:#fff;
+      border:none;
+      cursor:pointer;
+    }
+    footer{
+      text-align:center;
+      padding:15px;
+      margin-top:20px;
+      border-top:1px solid #ccc;
+    }
+    @keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+    @keyframes slideUp{from{transform:translateY(20px);opacity:0;}to{transform:none;opacity:1;}}
+  </style>
+</head>
+<body>
+  <button class="toggle" onclick="toggleMode()">🌙 / ☀️</button>
+
+  <header>
+    <img src="c6faf1d1-4a1d-483a-9fa6-295d3a3f2328.png" alt="Wassaly Logo">
+    <h1>وصلي - Wassaly</h1>
+    <p>Delivery To Your Door</p>
+  </header>
+
+  <div class="container">
+    <!-- قسم العميل -->
+    <div class="box">
+      <h2>طلب توصيل</h2>
+      <input id="cname" placeholder="اسمك">
+      <input id="cphone" placeholder="رقمك">
+      <textarea id="order" placeholder="تفاصيل الطلب"></textarea>
+      <input id="price" type="number" min="10" placeholder="السعر (10 جنيه على الأقل)">
+
+      <select id="type">
+        <option>مطعم</option>
+        <option>متجر</option>
+        <option>طلب شخصي</option>
+        <option>توصيلية</option>
+      </select>
+
+      <select id="vehicle">
+        <option>موتوسيكل</option>
+        <option>عربية</option>
+        <option>توك توك</option>
+        <option>عجلة</option>
+      </select>
+
+      <select id="driver"></select>
+
+      <button onclick="sendWhats()">إرسال الطلب على واتساب</button>
+    </div>
+
+    <!-- قسم السواق -->
+    <div class="box">
+      <h2>تسجيل سواق جديد</h2>
+      <input id="dname" placeholder="اسم السواق">
+      <input id="dphone" placeholder="رقم واتساب">
+      <input id="dimg" placeholder="رابط صورة السواق">
+      <select id="dvehicle">
+        <option>موتوسيكل</option>
+        <option>عربية</option>
+        <option>توك توك</option>
+        <option>عجلة</option>
+      </select>
+      <button onclick="saveDriver()">حفظ السواق</button>
+    </div>
+  </div>
+
+  <footer>
+    حقوق النشر محفوظة ©<br>
+    تطوير: mahmoud halhoul<br>
+    تصميم: mohamed elskhely
+  </footer>
+
+  <script>
+    const driverSelect = document.getElementById('driver');
+
+    function toggleMode(){
+      document.body.classList.toggle('dark');
+    }
+
+    function loadDrivers(){
+      driverSelect.innerHTML='';
+      const drivers = JSON.parse(localStorage.getItem('drivers')||'[]');
+      drivers.forEach((d,i)=>{
+        const op=document.createElement('option');
+        op.value=i;
+        op.text=d.name+' - '+d.vehicle;
+        driverSelect.appendChild(op);
+      });
+    }
+
+    function saveDriver(){
+      const drivers = JSON.parse(localStorage.getItem('drivers')||'[]');
+      drivers.push({
+        name:dname.value,
+        phone:dphone.value,
+        img:dimg.value,
+        vehicle:dvehicle.value
+      });
+      localStorage.setItem('drivers',JSON.stringify(drivers));
+      loadDrivers();
+      alert('تم حفظ السواق');
+    }
+
+    function sendWhats(){
+      const drivers = JSON.parse(localStorage.getItem('drivers')||'[]');
+      const d = drivers[driverSelect.value];
+      if(!d){alert('اختار سواق');return;}
+      const msg = `طلب جديد من وصلي 🚀%0Aالاسم: ${cname.value}%0Aالهاتف: ${cphone.value}%0Aالطلب: ${order.value}%0Aالسعر: ${price.value} جنيه%0Aالنوع: ${type.value}%0Aالمركبة: ${vehicle.value}`;
+      window.open(`https://wa.me/${d.phone}?text=${msg}`,'_blank');
+    }
+
+    loadDrivers();
+  </script>
+</body>
+</html>
